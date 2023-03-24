@@ -13,6 +13,7 @@ class Session:
 
     async def get(self, url, **kwargs):
         payload = {
+            'proxy_method': kwargs.get('proxy_method', 'static'),
             'method': 'GET',
             'url': url,
             'headers': kwargs.get('headers'),
