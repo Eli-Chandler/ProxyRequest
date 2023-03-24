@@ -12,6 +12,8 @@ class Session:
         await self.session.close()
 
     async def get(self, url, **kwargs):
+        if self.session is None:
+            await self.setup()
         payload = {
             'proxy_method': kwargs.get('proxy_method', 'static'),
             'method': 'GET',
@@ -26,6 +28,8 @@ class Session:
         return r
 
     async def post(self, url, **kwargs):
+        if self.session is None:
+            await self.setup()
         payload = {
             'proxy_method': kwargs.get('proxy_method', 'static'),
             'method': 'POST',
