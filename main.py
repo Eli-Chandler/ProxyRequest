@@ -5,10 +5,10 @@ class Session:
     def __init__(self, proxy_url):
         self.proxy_url = proxy_url
 
-    async def __aenter__(self):
+    async def setup(self):
         self.session = aiohttp.ClientSession()
 
-    async def __aexit__(self):
+    async def close(self):
         await self.session.close()
 
     async def get(self, url, **kwargs):
@@ -21,8 +21,8 @@ class Session:
             'data': kwargs.get('data'),
             'json': kwargs.get('json', None),
         }
-        async with self.session.post(self.proxy_url, json=payload) as response:
-            return response
+        r = await self.session.post(self.proxy_url, json=payload)
+        return r
 
     async def post(self, url, **kwargs):
         payload = {
@@ -34,5 +34,16 @@ class Session:
             'data': kwargs.get('data'),
             'json': kwargs.get('json', None),
         }
-        async with self.session.post(self.proxy_url, json=payload) as response:
-            return response
+        r = await self.session.post(self.proxy_url, json=payload)
+        return r
+
+async def main():
+    s = Session('http://localhost:5000')
+    await s.setup()
+    r = await s.get('https://www.youtube.com')
+    print(await r.text())
+
+if __name__ == '__main__':
+    import asyncio
+
+    asyncio.run(main())
