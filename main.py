@@ -26,6 +26,7 @@ class Session:
 
     async def post(self, url, **kwargs):
         payload = {
+            'proxy_method': kwargs.get('proxy_method', 'static'),
             'method': 'POST',
             'url': url,
             'headers': kwargs.get('headers'),
@@ -34,6 +35,7 @@ class Session:
             'data': kwargs.get('data'),
             'json': kwargs.get('json', None),
         }
+
         r = await self.session.post(self.proxy_url, json=payload)
         return r
 
